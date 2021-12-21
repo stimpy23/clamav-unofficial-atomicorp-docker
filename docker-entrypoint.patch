@@ -1,171 +1,23 @@
---- docker-entrypoint.orig.sh	2021-12-20 15:00:46.423786385 +0100
-+++ docker-entrypoint.sh	2021-12-20 15:16:14.840771283 +0100
-@@ -17,6 +17,168 @@
- # Assign ownership to the database directory, just in case it is a mounted volume
- chown -R clamav:clamav /var/lib/clamav
+--- docker-entrypoint.orig.sh	2021-12-20 18:12:21.406996532 +0100
++++ docker-entrypoint.sh	2021-12-21 13:01:54.384229555 +0100
+@@ -11,7 +11,10 @@
+ set -eu
  
-+# autoupdate clamav-unofficial-sigs configuration
-+# (added by Philipp Giebel <public@ambnet.biz>)
-+
-+set +u
-+
-+echo "# clamav-unofficial-sigs configuration created by docker container" >/etc/clamav-unofficial-sigs/user.conf.new
-+echo "# DO NOT EDIT! This will be overwritten on startup. Use environment variables instead." >>/etc/clamav-unofficial-sigs/user.conf.new
-+echo "" >>/etc/clamav-unofficial-sigs/user.conf.new
-+
-+if [ -n "${MALWAREPATROL_RECEIPT_CODE}" ]; then 
-+  echo "malwarepatrol_receipt_code=\"${MALWAREPATROL_RECEIPT_CODE}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${MALWAREPATROL_PRODUCT_CODE}" ]; then 
-+  echo "malwarepatrol_product_code=\"${MALWAREPATROL_PRODUCT_CODE}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${MALWAREPATROL_LIST}" ]; then 
-+  echo "malwarepatrol_list=\"${MALWAREPATROL_LIST}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${MALWAREPATROL_FREE}" ]; then 
-+  echo "malwarepatrol_free=\"${MALWAREPATROL_FREE}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${MALWAREPATROL_DB}" ]; then 
-+  echo "malwarepatrol_db=\"${MALWAREPATROL_DB}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${MALWAREEXPERT_SERIAL_KEY}" ]; then 
-+  echo "malwareexpert_serial_key=\"${MALWAREEXPERT_SERIAL_KEY}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${SECURITEINFO_AUTHORISATION_SIGNATURE}" ]; then 
-+  echo "securiteinfo_authorisation_signature=\"${SECURITEINFO_AUTHORISATION_SIGNATURE}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${SECURITEINFO_PREMIUM}" ]; then 
-+  echo "securiteinfo_premium=\"${SECURITEINFO_PREMIUM}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${ADDITIONAL_UPDATE_HOURS}" ]; then 
-+  echo "additional_update_hours=\"${ADDITIONAL_UPDATE_HOURS}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${INTERSERVER_UPDATE_HOURS}" ]; then 
-+  echo "interserver_update_hours=\"${INTERSERVER_UPDATE_HOURS}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${LINUXMALWAREDETECT_UPDATE_HOURS}" ]; then 
-+  echo "linuxmalwaredetect_update_hours=\"${LINUXMALWAREDETECT_UPDATE_HOURS}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${MALWAREEXPERT_UPDATE_HOURS}" ]; then 
-+  echo "malwareexpert_update_hours=\"${MALWAREEXPERT_UPDATE_HOURS}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${MALWAREPATROL_UPDATE_HOURS}" ]; then 
-+  echo "malwarepatrol_update_hours=\"${MALWAREPATROL_UPDATE_HOURS}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${SANESECURITY_UPDATE_HOURS}" ]; then 
-+  echo "sanesecurity_update_hours=\"${SANESECURITY_UPDATE_HOURS}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${SECURITEINFO_PREMIUM_UPDATE_HOURS}" ]; then 
-+  echo "securiteinfo_premium_update_hours=\"${SECURITEINFO_PREMIUM_UPDATE_HOURS}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${SECURITEINFO_UPDATE_HOURS}" ]; then 
-+  echo "securiteinfo_update_hours=\"${SECURITEINFO_UPDATE_HOURS}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${URLHAUS_UPDATE_HOURS}" ]; then 
-+  echo "urlhaus_update_hours=\"${URLHAUS_UPDATE_HOURS}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${YARARULESPROJECT_UPDATE_HOURS}" ]; then 
-+  echo "yararulesproject_update_hours=\"${YARARULESPROJECT_UPDATE_HOURS}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${ADDITIONAL_ENABLED}" ]; then 
-+  echo "additional_enabled=\"${ADDITIONAL_ENABLED}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${INTERSERVER_ENABLED}" ]; then 
-+  echo "interserver_enabled=\"${INTERSERVER_ENABLED}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${LINUXMALWAREDETECT_ENABLED}" ]; then 
-+  echo "linuxmalwaredetect_enabled=\"${LINUXMALWAREDETECT_ENABLED}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${MALWAREEXPERT_ENABLED}" ]; then 
-+  echo "malwareexpert_enabled=\"${MALWAREEXPERT_ENABLED}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${MALWAREPATROL_ENABLED}" ]; then 
-+  echo "malwarepatrol_enabled=\"${MALWAREPATROL_ENABLED}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${SANESECURITY_ENABLED}" ]; then 
-+  echo "sanesecurity_enabled=\"${SANESECURITY_ENABLED}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${SECURITEINFO_ENABLED}" ]; then 
-+  echo "securiteinfo_enabled=\"${SECURITEINFO_ENABLED}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${URLHAUS_ENABLED}" ]; then 
-+  echo "urlhaus_enabled=\"${URLHAUS_ENABLED}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${YARARULESPROJECT_ENABLED}" ]; then 
-+  echo "yararulesproject_enabled=\"${YARARULESPROJECT_ENABLED}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${ENABLE_YARARULES}" ]; then 
-+  echo "enable_yararules=\"${ENABLE_YARARULES}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${DEFAULT_DBS_RATING}" ]; then 
-+  echo "default_dbs_rating=\"${DEFAULT_DBS_RATING}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${INTERSERVER_DBS_RATING}" ]; then 
-+  echo "interserver_dbs_rating=\"${INTERSERVER_DBS_RATING}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${LINUXMALWAREDETECT_DBS_RATING}" ]; then 
-+  echo "linuxmalwaredetect_dbs_rating=\"${LINUXMALWAREDETECT_DBS_RATING}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${MALWAREEXPERT_DBS_RATING}" ]; then 
-+  echo "malwareexpert_dbs_rating=\"${MALWAREEXPERT_DBS_RATING}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${SANESECURITY_DBS_RATING}" ]; then 
-+  echo "sanesecurity_dbs_rating=\"${SANESECURITY_DBS_RATING}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${SECURITEINFO_DBS_RATING}" ]; then 
-+  echo "securiteinfo_dbs_rating=\"${SECURITEINFO_DBS_RATING}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${URLHAUS_DBS_RATING}" ]; then 
-+  echo "urlhaus_dbs_rating=\"${URLHAUS_DBS_RATING}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${YARARULESPROJECT_DBS_RATING}" ]; then 
-+  echo "yararulesproject_dbs_rating=\"${YARARULESPROJECT_DBS_RATING}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${ADDITIONAL_DBS}" ]; then 
-+  echo "declare -a additional_dbs=(" >>/etc/clamav-unofficial-sigs/user.conf.new
-+  echo "${ADDITIONAL_DBS}" |sed 's/;/\n/g' >>/etc/clamav-unofficial-sigs/user.conf.new
-+  echo ")" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${CLAMD_RESTART_OPT}" ]; then 
-+  echo "clamd_restart_opt=\"${CLAMD_RESTART_OPT}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${DOWNLOADER_IGNORE_SSL_ERRORS}" ]; then 
-+  echo "downloader_ignore_ssl_errors=\"${DOWNLOADER_IGNORE_SSL_ERRORS}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${CURL_PROXY}" ]; then 
-+  echo "curl_proxy=\"${CURL_PROXY}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${DIG_PROXY}" ]; then 
-+  echo "dig_proxy=\"${DIG_PROXY}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${HOST_PROXY}" ]; then 
-+  echo "host_proxy=\"${HOST_PROXY}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${RSYNC_PROXY}" ]; then 
-+  echo "rsync_proxy=\"${RSYNC_PROXY}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${RSYNC_CONNECT_PROG}" ]; then 
-+  echo "rsync_connect_prog=\"${RSYNC_CONNECT_PROG}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+if [ -n "${WGET_PROXY}" ]; then 
-+  echo "wget_proxy=\"${WGET_PROXY}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+fi
-+echo "reload_dbs=\"no\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+echo "logging_enabled=\"no\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+echo "user_configuration_complete=\"yes\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-+
-+set +e
-+
-+/usr/bin/cmp -s /etc/clamav-unofficial-sigs/user.conf /etc/clamav-unofficial-sigs/user.conf.new
-+if [ $? -gt 0 ]; then
-+	mv /etc/clamav-unofficial-sigs/user.conf.new /etc/clamav-unofficial-sigs/user.conf
-+	/usr/local/sbin/clamav-unofficial-sigs.sh -F -s
+ if [ ! -d "/run/clamav" ]; then
+-	install -d -g "clamav" -m 775 -o "clamav" "/run/clamav"
++	install -d -g "clamav" -m 775 -o "root" "/run/clamav"
 +else
-+	rm /etc/clamav-unofficial-sigs/user.conf.new
-+fi
++  chown root:clamav /run/clamav
++  chmod 775 /run/clamav
+ fi
+ 
+ # Assign ownership to the database directory, just in case it is a mounted volume
+@@ -76,6 +79,8 @@
+ 		clamav-milter &
+ 	fi
+ 
++	/usr/local/sbin/update-other-rules.sh &
 +
-+set -eu
-+
- # run command if it is not starting with a "-" and is an executable in PATH
- if [ "${#}" -gt 0 ] && \
-    [ "${1#-}" = "${1}" ] && \
+ 	# Wait forever (or until canceled)
+ 	exec tail -f "/dev/null"
+ fi

@@ -62,17 +62,14 @@ RUN apk add --no-cache \
 # Download and install clamav-unofficial-sigs downloader
 RUN mkdir -p /usr/local/sbin \
     && mkdir -p /etc/clamav-unofficial-sigs/ \
-    && wget --quiet https://raw.githubusercontent.com/extremeshok/clamav-unofficial-sigs/master/clamav-unofficial-sigs.sh -O /usr/local/sbin/clamav-unofficial-sigs.sh \
+    && wget --quiet "https://raw.githubusercontent.com/extremeshok/clamav-unofficial-sigs/master/clamav-unofficial-sigs.sh" -O /usr/local/sbin/clamav-unofficial-sigs.sh \
     && chmod 755 /usr/local/sbin/clamav-unofficial-sigs.sh \
-    && wget --quiet https://raw.githubusercontent.com/extremeshok/clamav-unofficial-sigs/master/config/master.conf -O /etc/clamav-unofficial-sigs/master.conf \
-    && wget --quiet https://raw.githubusercontent.com/extremeshok/clamav-unofficial-sigs/master/config/user.conf -O /etc/clamav-unofficial-sigs/user.conf \
+    && wget --quiet "https://raw.githubusercontent.com/extremeshok/clamav-unofficial-sigs/master/config/master.conf" -O /etc/clamav-unofficial-sigs/master.conf \
+    && wget --quiet "https://raw.githubusercontent.com/extremeshok/clamav-unofficial-sigs/master/config/user.conf" -O /etc/clamav-unofficial-sigs/user.conf \
     && wget --quiet "https://raw.githubusercontent.com/extremeshok/clamav-unofficial-sigs/master/config/os/os.alpine.conf" -O /etc/clamav-unofficial-sigs/os.conf \
     && sed -i 's/work_dir_urlhaust/work_dir_urlhaus/g' /usr/local/sbin/clamav-unofficial-sigs.sh 
 
-# Add update-other-rules.sh to freshclam configuration
-RUN echo "OnUpdateExecute /usr/local/sbin/update-other-rules.sh" >>/etc/clamav/freshclam.conf
-
-# Add clamav-unofficial-sigs autoconfiguration to existing init script
+# Add update-other-sigs.sh to existing init script
 COPY /docker-entrypoint.patch .
 RUN /usr/bin/patch init docker-entrypoint.patch \
     && rm -f docker-entrypoint.patch
@@ -86,6 +83,11 @@ COPY /update-other-rules.sh /usr/local/sbin/
 RUN chown root:clamav /usr/local/sbin/update-other-rules.sh \
     && chmod 750 /usr/local/sbin/update-other-rules.sh
 
+# Add update-atomicorp-sigs.sh
+COPY /update-atomicorp-sigs.sh /usr/local/sbin/
+RUN chown root:clamav /usr/local/sbin/update-atomicorp-sigs.sh \
+    && chmod 750 /usr/local/sbin/update-atomicorp-sigs.sh
+
 # Disable clamd and freshclam logging
 RUN sed -i 's/^LogFile .*/LogFile \/dev\/stdout/g' /etc/clamav/clamd.conf \
     && sed -i 's/^UpdateLogFile \(.*\)/#UpdateLogFile \1/g' /etc/clamav/freshclam.conf \
@@ -93,10 +95,6 @@ RUN sed -i 's/^LogFile .*/LogFile \/dev\/stdout/g' /etc/clamav/clamd.conf \
 
 # Fix clamdcheck.sh
 RUN sed -i 's/localhost/127.0.0.1/g' /usr/local/bin/clamdcheck.sh
-
-# Fix /var/run permissions and ownership
-RUN chown root:clamav /run/clamav \
-    && chmod 775 /run/clamav
 
 EXPOSE 3310
 EXPOSE 7357
