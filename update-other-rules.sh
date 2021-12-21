@@ -124,9 +124,6 @@ if [ -n "${ADDITIONAL_DBS}" ]; then
     echo "${ADDITIONAL_DBS}" |sed 's/;/\n/g' >>/etc/clamav-unofficial-sigs/user.conf.new
     echo ")" >>/etc/clamav-unofficial-sigs/user.conf.new
 fi
-if [ -n "${CLAMD_RESTART_OPT}" ]; then
-    echo "clamd_restart_opt=\"${CLAMD_RESTART_OPT}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
-fi
 if [ -n "${DOWNLOADER_IGNORE_SSL_ERRORS}" ]; then
     echo "downloader_ignore_ssl_errors=\"${DOWNLOADER_IGNORE_SSL_ERRORS}\"" >>/etc/clamav-unofficial-sigs/user.conf.new
 fi
